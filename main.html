@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Tập Bảng Nguyên Tố Hóa Học</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            color: #4a5568;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .element-display {
+            background: linear-gradient(135deg, #4299e1, #667eea);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            animation: slideIn 0.6s ease-out;
+            box-shadow: 0 10px 25px rgba(66, 153, 225, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .element-symbol {
+            font-size: 4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .element-question {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 130px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4299e1, #667eea);
+            color: white;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.6);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1em;
+            animation: resultShow 0.5s ease-out;
+        }
+
+        @keyframes resultShow {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result.correct {
+            background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+            color: #22543d;
+            border: 2px solid #48bb78;
+        }
+
+        .result.incorrect {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            color: #742a2a;
+            border: 2px solid #f56565;
+        }
+
+        .correct-answer {
+            margin-top: 15px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 1.8em;
+            }
+            
+            .element-symbol {
+                font-size: 3em;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #667eea;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle 2s ease-out forwards;
+        }
+
+        @keyframes particle {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🧪 Luyện Tập Hóa Học</h1>
+        <p class="subtitle">Thử thách kiến thức bảng nguyên tố của bạn!</p>
+        
+        <div class="element-display" id="elementDisplay">
+            <div class="element-symbol" id="elementSymbol">H</div>
+            <div class="element-question">Bạn biết nguyên tố này không?</div>
+        </div>
+
+        <form id="answerForm">
+            <div class="form-group">
+                <label for="elementName">Tên tiếng Anh:</label>
+                <input type="text" id="elementName" placeholder="Ví dụ: Hydrogen" autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="valence">Hóa trị:</label>
+                <input type="text" id="valence" placeholder="Ví dụ: I hoặc II, III" autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="atomicMass">Khối lượng nguyên tử:</label>
+                <input type="text" id="atomicMass" placeholder="Ví dụ: 1 hoặc 35.5" autocomplete="off">
+            </div>
+        </form>
+
+        <div class="button-group">
+            <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()">
+                🔍 Kiểm Tra
+            </button>
+            <button class="btn btn-secondary" id="nextBtn" onclick="nextQuestion()" style="display: none;">
+                ➡️ Tiếp Theo
+            </button>
+        </div>
+
+        <div id="result" class="result" style="display: none;"></div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="correctCount">0</div>
+                <div class="stat-label">Đúng</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Tổng</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="accuracy">0%</div>
+                <div class="stat-label">Độ chính xác</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu nguyên tố từ bảng
+        const elements = [
+            { symbol: 'H', name: 'Hydrogen', valence: 'I', mass: '1' },
+            { symbol: 'He', name: 'Helium', valence: '', mass: '4' },
+            { symbol: 'Li', name: 'Lithium', valence: 'I', mass: '7' },
+            { symbol: 'Be', name: 'Beryllium', valence: 'II', mass: '9' },
+            { symbol: 'B', name: 'Boron', valence: 'III', mass: '11' },
+            { symbol: 'C', name: 'Carbon', valence: 'II, IV', mass: '12' },
+            { symbol: 'N', name: 'Nitrogen', valence: 'II, III, IV', mass: '14' },
+            { symbol: 'O', name: 'Oxygen', valence: 'II', mass: '16' },
+            { symbol: 'F', name: 'Fluorine', valence: 'I', mass: '19' },
+            { symbol: 'Ne', name: 'Neon', valence: '', mass: '20' },
+            { symbol: 'Na', name: 'Sodium', valence: 'I', mass: '23' },
+            { symbol: 'Mg', name: 'Magnesium', valence: 'II', mass: '24' },
+            { symbol: 'Al', name: 'Aluminium', valence: 'III', mass: '27' },
+            { symbol: 'Si', name: 'Silicon', valence: 'IV', mass: '28' },
+            { symbol: 'P', name: 'Phosphorus', valence: 'III, V', mass: '31' },
+            { symbol: 'S', name: 'Sulfur', valence: 'II, IV, VI', mass: '32' },
+            { symbol: 'Cl', name: 'Chlorine', valence: 'I', mass: '35.5' },
+            { symbol: 'Ar', name: 'Argon', valence: '', mass: '39.9' },
+            { symbol: 'K', name: 'Potassium', valence: 'I', mass: '39' },
+            { symbol: 'Ca', name: 'Calcium', valence: 'II', mass: '40' },
+            { symbol: 'Fe', name: 'Iron', valence: 'II, III', mass: '56' },
+            { symbol: 'Cu', name: 'Copper', valence: 'I, II', mass: '64' },
+            { symbol: 'Zn', name: 'Zinc', valence: 'II', mass: '65' },
+            { symbol: 'Ag', name: 'Silver', valence: 'I', mass: '108' },
+            { symbol: 'Ba', name: 'Barium', valence: 'II', mass: '137' },
+            { symbol: 'Pb', name: 'Lead', valence: 'II, IV', mass: '207' }
+        ];
+
+        let currentElement = null;
+        let correctAnswers = 0;
+        let totalQuestions = 0;
+
+        // Hàm khởi tạo câu hỏi mới
+        function initNewQuestion() {
+            currentElement = elements[Math.floor(Math.random() * elements.length)];
+            document.getElementById('elementSymbol').textContent = currentElement.symbol;
+            
+            // Clear form
+            document.getElementById('elementName').value = '';
+            document.getElementById('valence').value = '';
+            document.getElementById('atomicMass').value = '';
+            
+            // Hide result và next button
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('checkBtn').style.display = 'inline-block';
+            
+            // Enable form
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.disabled = false);
+            
+            // Focus vào input đầu tiên
+            document.getElementById('elementName').focus();
+            
+            // Animate element display
+            const elementDisplay = document.getElementById('elementDisplay');
+            elementDisplay.style.animation = 'none';
+            elementDisplay.offsetHeight; // Trigger reflow
+            elementDisplay.style.animation = 'slideIn 0.6s ease-out';
+        }
+
+        // Hàm chuẩn hóa chuỗi để so sánh
+        function normalizeString(str) {
+            return str.toLowerCase().trim().replace(/\s+/g, ' ');
+        }
+
+        // Hàm kiểm tra đáp án
+        function checkAnswer() {
+            const userNameInput = document.getElementById('elementName').value;
+            const userValenceInput = document.getElementById('valence').value;
+            const userMassInput = document.getElementById('atomicMass').value;
+            
+            if (!userNameInput.trim() || !userMassInput.trim()) {
+                alert('Vui lòng điền đầy đủ tên và khối lượng nguyên tử!');
+                return;
+            }
+
+            totalQuestions++;
+            
+            const userName = normalizeString(userNameInput);
+            const correctName = normalizeString(currentElement.name);
+            const userValence = normalizeString(userValenceInput);
+            const correctValence = normalizeString(currentElement.valence);
+            const userMass = userMassInput.trim();
+            const correctMass = currentElement.mass;
+            
+            const nameCorrect = userName === correctName;
+            const valenceCorrect = !currentElement.valence || userValence === correctValence;
+            const massCorrect = userMass === correctMass;
+            
+            const isAllCorrect = nameCorrect && valenceCorrect && massCorrect;
+            
+            const resultDiv = document.getElementById('result');
+            
+            if (isAllCorrect) {
+                correctAnswers++;
+                resultDiv.className = 'result correct';
+                resultDiv.innerHTML = '🎉 <strong>Chính xác!</strong> Bạn thật tuyệt vời!';
+                createParticles();
+            } else {
+                resultDiv.className = 'result incorrect';
+                let feedback = '❌ <strong>Chưa chính xác!</strong><br><div class="correct-answer">';
+                feedback += `<strong>Đáp án đúng:</strong><br>`;
+                feedback += `• Tên: ${currentElement.name}<br>`;
+                if (currentElement.valence) {
+                    feedback += `• Hóa trị: ${currentElement.valence}<br>`;
+                } else {
+                    feedback += `• Hóa trị: Khí trở (không có hóa trị)<br>`;
+                }
+                feedback += `• Khối lượng: ${currentElement.mass}`;
+                feedback += '</div>';
+                resultDiv.innerHTML = feedback;
+            }
+            
+            resultDiv.style.display = 'block';
+            
+            // Disable form và show next button
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.disabled = true);
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            
+            updateStats();
+        }
+
+        // Hàm tạo hiệu ứng particles khi đúng
+        function createParticles() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = window.innerHeight + 'px';
+                    particle.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+
+        // Hàm cập nhật thống kê
+        function updateStats() {
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('totalCount').textContent = totalQuestions;
+            const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+
+        // Hàm chuyển câu hỏi tiếp theo
+        function nextQuestion() {
+            initNewQuestion();
+        }
+
+        // Xử lý phím Enter
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const checkBtn = document.getElementById('checkBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                if (checkBtn.style.display !== 'none') {
+                    checkAnswer();
+                } else if (nextBtn.style.display !== 'none') {
+                    nextQuestion();
+                }
+            }
+        });
+
+        // Khởi tạo câu hỏi đầu tiên
+        document.addEventListener('DOMContentLoaded', function() {
+            initNewQuestion();
+        });
+    </script>
+</body>
+</html>
